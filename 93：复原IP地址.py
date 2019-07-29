@@ -2,37 +2,26 @@
 # -*- coding:utf-8 -*- 
 # Author: Jia ShiLin
 
-def is_legal(a):
-    if 0<=a<=255:
+class Solution:
+    def restoreIpAddresses(self, s: str) -> List[str]:
+        self.res = []
+        tmpList = []
+        self.dfs(s, tmpList)
+        return self.res
 
-
-
-
-def restoreIpAddresses(s):
-    """
-    :type s: str
-    :rtype: List[str]
-    """
-    if not s:
-        return []
-    def restore(s: str, remain: int):
-        if remain == 1:
-            if -1 < int(s) < 256 and str(int(s)) == s: #####如果s='01',则int(s)=1
-                return [s]
-            return []
-        res = []
-        if remain <= len(s) <= 3 * remain - 2:
-            for i in restore(s[1:], remain - 1):
-                res.append(s[:1] + '.' + i)
-        if int(s[:2]) > 9 and remain + 1 <= len(s) <= 3 * remain - 1:
-            for i in restore(s[2:], remain - 1):
-                res.append(s[:2] + '.' + i)
-        if 99 < int(s[:3]) < 256 and remain + 2 <= len(s) <= 3 * remain:
-            for i in restore(s[3:], remain - 1):
-                res.append(s[:3] + '.' + i)
-        return res
-
-    return restore(s, 4)
+    #dfs遍历，s为待处理字段，tmp存储所有ip小段
+    def dfs(self, s, tmpList):
+        if len(tmpList) == 4:   #递归出口，凑够4段
+            if len(s) == 0:     #s没有剩余，说明找到一个合法ip，否则返回
+                self.res.append('.'.join(tmpList))
+            return
+        for i in range(1, 4):   #遍历取s的头，长度从1到3
+            if i <= len(s):     #防止越界
+                if int(s[:i]) > 255:    #数字超出范围
+                    return
+                elif i > 1 and s[0] == '0':    #除去0开头，且长度大于1情况
+                    return
+                self.dfs(s[i:], tmpList + [s[:i]])  #截断s，并将本次截取内容写入tmp
 
 
 if __name__ == '__main__':
