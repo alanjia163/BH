@@ -6,7 +6,7 @@ def findContentChildren(g, s):
     count = 0
     g.sort()
     s.sort()
-    t=0
+    t=0#用来记录下次,匹配的位置
     for i in range(len(s)):
         for j in range(t,len(g)):
             if g[j] <= s[i]:
